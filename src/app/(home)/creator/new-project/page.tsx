@@ -128,7 +128,6 @@ export default function NewProjectPage() {
                       name="dueDate"
                       type="date"
                       className="w-fit"
-                      min={new Date().toISOString()}
                       required
                       disabled={isPending}
                     />
