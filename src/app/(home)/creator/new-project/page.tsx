@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/lib/actions/creator";
 import { ArrowLeft, FileText, Target } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -24,12 +25,14 @@ export default function NewProjectPage() {
     isError: false,
     isValid: false,
   });
+  const router = useRouter();
 
   useEffect(() => {
     if (state.isError) {
       toast.error(state.message);
     } else if (state.isValid) {
       toast.success("Project created successfully!");
+      router.push("/creator");
     }
   }, [state.isError, state.isValid]);
 

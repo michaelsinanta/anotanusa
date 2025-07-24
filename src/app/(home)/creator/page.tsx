@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -16,9 +15,6 @@ export default function CreatorDashboard() {
             </Link>
           </Button>
         </div>
-      </div>
-      <div className="mb-6 flex items-center gap-4">
-        <Input placeholder="Search projects" className="max-w-sm" />
       </div>
     </div>
   );

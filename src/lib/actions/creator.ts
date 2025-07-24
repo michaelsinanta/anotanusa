@@ -8,6 +8,7 @@ import { type ActionState } from "@/lib/types/state";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import z from "zod";
 import { getAuthenticatedAppForUser } from "../firebase/server/serverApp";
+import { redirect } from "next/navigation";
 
 export async function createProject(
   prevstate: ActionState<FlattenedCreateProjectErrors>,
@@ -78,6 +79,7 @@ export async function createProject(
         title: result.data.title,
         totalCredits: result.data.reward,
         totalAnnotators: result.data.maxContributors,
+        isActive: true,
       },
     );
 
