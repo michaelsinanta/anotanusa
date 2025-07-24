@@ -98,7 +98,10 @@ export default function JobCard({ job }: { job: Job }) {
               {job.answers?.size}/{job.totalParticipants} tasks
             </span>
           </div>
-          <Progress value={job.answers?.size} className="mb-1 h-2" />
+          <Progress
+            value={((job.answers?.size || 0) / job.totalParticipants) * 100}
+            className="mb-1 h-2"
+          />
           <div className="text-xs text-gray-600">
             {((job.answers?.size || 0) / job.totalParticipants) * 100}%
           </div>
@@ -137,7 +140,7 @@ export default function JobCard({ job }: { job: Job }) {
             <Calendar className="h-4 w-4 text-gray-400" />
             <span className="text-gray-600">Due:</span>
             <span
-              className={`font-medium ${
+              className={`font-medium whitespace-nowrap ${
                 isOverdue
                   ? "text-red-600"
                   : daysUntilDue <= 3
@@ -148,6 +151,7 @@ export default function JobCard({ job }: { job: Job }) {
               {dueDate.toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
+                year: "numeric",
               })}
             </span>
           </div>
