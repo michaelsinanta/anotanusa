@@ -8,7 +8,7 @@ type ProfilePictureProps = {
 export function ProfilePicture({ imageUrl }: ProfilePictureProps) {
   return (
     <Avatar>
-      <AvatarImage src={imageUrl ?? ""} />
+      <AvatarImage src={imageUrl ?? undefined} />
       <AvatarFallback>
         <UserRound />
       </AvatarFallback>
