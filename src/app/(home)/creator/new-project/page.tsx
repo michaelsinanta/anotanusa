@@ -15,7 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/lib/actions/creator";
 import { ArrowLeft, FileText, Target } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function NewProjectPage() {
   const [state, formAction, isPending] = useActionState(createProject, {
@@ -23,6 +24,14 @@ export default function NewProjectPage() {
     isError: false,
     isValid: false,
   });
+
+  useEffect(() => {
+    if (state.isError) {
+      toast.error(state.message);
+    } else if (state.isValid) {
+      toast.success("Project created successfully!");
+    }
+  }, [state.isError, state.isValid]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
