@@ -38,6 +38,6 @@
     "typescript": "^5"
   },
   "lint-staged": {
-    "./src/*": "npm run pre-commit"
+    "./src/**": "npm run pre-commit"
   }
 }
