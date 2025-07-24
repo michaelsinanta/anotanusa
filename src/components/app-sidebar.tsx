@@ -1,6 +1,19 @@
 "use client";
 
-import * as React from "react";
+import { NavDocuments } from "@/components/nav-documents";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import useUserSession from "@/hooks/firebase/useUserSession";
 import {
   IconCamera,
   IconChartBar,
@@ -17,24 +30,11 @@ import {
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
-import Image from "next/image";
-import { NavDocuments } from "@/components/nav-documents";
-import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
 import { User } from "firebase/auth";
-import useUserSession from "@/hooks/firebase/useUserSession";
-import { Button } from "./ui/button";
+import Image from "next/image";
 import Link from "next/link";
+import * as React from "react";
+import { Button } from "./ui/button";
 
 type SidebarProps = {
   initialUser: User;
@@ -170,18 +170,12 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="gap-1 data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#" className="my-3 flex items-center gap-1">
-                <Image
-                  src="/logo.png"
-                  alt="Logo"
-                  width={70}
-                  height={90}
-                  className="h-18 rotate-24"
-                />
-                <span className="text-3xl font-bold">anotanusa</span>
-              </a>
+              <Link href="#" className="flex items-center">
+                <Image src="/logo.svg" alt="Logo" width={36} height={36} />
+                <span className="text-2xl font-bold">AnotaNusa</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
