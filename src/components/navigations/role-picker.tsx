@@ -6,11 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { usePathname, useRouter } from "next/navigation";
+import { useRole } from "@/hooks/use-role";
+import { useRouter } from "next/navigation";
 
 export function RolePicker() {
-  const pathname = usePathname();
-  const role = pathname.replace(/^\/+/, "");
+  const role = useRole();
   const router = useRouter();
 
   const handleValueChange = (value: string) => {

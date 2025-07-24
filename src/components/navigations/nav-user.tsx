@@ -30,14 +30,14 @@ export function NavUser({ user }: { user: User }) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <ProfilePicture imageUrl={user.photoURL} />
+              <ProfilePicture imageUrl={user?.photoURL} />
 
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {user.displayName ?? user.email}
+                  {user?.displayName ?? user?.email}
                 </span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
+                  {user?.email}
                 </span>
               </div>
               <IconDotsVertical className="ml-auto size-4" />
