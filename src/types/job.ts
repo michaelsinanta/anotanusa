@@ -5,7 +5,6 @@ export interface Job {
   description: string;
   creator: string;
   totalCredits: number;
-  startDate: Date;
   endDate: Date;
   totalParticipants: number;
   answers?: Map<string, string[]>;

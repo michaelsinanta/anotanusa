@@ -4,6 +4,8 @@ import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import JobCard from "./job-card";
 import JobFilters from "./job-filter";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase/client/clientApp";
 
 interface Job {
   id: number;
@@ -12,7 +14,6 @@ interface Job {
   description: string;
   creator: string;
   totalCredits: number;
-  startDate: Date;
   endDate: Date;
   totalParticipants: number;
   answers?: Map<string, string[]>;
@@ -33,7 +34,24 @@ export function JobList() {
       setError(null);
       try {
         // TODO: Fetch jobs data
-        setJobs(mockJobs);
+        const projectsCol = collection(db, "anotanusa-project");
+        const projectsSnapshot = await getDocs(projectsCol);
+        const projects = projectsSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          const answersObj = data.answers ?? {};
+          return {
+            id: doc.id,
+            name: data.title ?? "Untitled",
+            type: data.annotationTask ?? "text-classification",
+            description: data.description ?? "",
+            creator: data.creator ?? "",
+            totalCredits: data.credit ?? 0,
+            endDate: data.dueDate ? new Date(data.dueDate) : new Date(),
+            totalParticipants: data.totalAnnotator ?? 0,
+            answers: new Map(Object.entries(answersObj)),
+          } as unknown as Job;
+        });
+        setJobs(projects);
       } catch (err) {
         setError("Failed to load jobs.");
       } finally {
@@ -53,7 +71,6 @@ export function JobList() {
         "Classify customer reviews as positive, negative, or neutral",
       creator: "E-commerce Analytics",
       totalCredits: 1500,
-      startDate: new Date("2025-01-30"),
       endDate: new Date("2025-02-15"),
       totalParticipants: 8,
       answers: new Map([["user1", ["Positive", "Negative", "Neutral"]]]),
@@ -65,7 +82,6 @@ export function JobList() {
       description: "Summarize news articles into concise summaries.",
       creator: "News AI",
       totalCredits: 1500,
-      startDate: new Date("2025-01-30"),
       endDate: new Date("2025-02-15"),
       totalParticipants: 5,
       answers: new Map([["user1", ["Positive", "Negative", "Neutral"]]]),
