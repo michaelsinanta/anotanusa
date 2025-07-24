@@ -27,7 +27,7 @@ const creatorData = {
   navMain: [
     {
       title: "Your Projects",
-      url: "#",
+      url: "/creator",
       icon: Folder,
     },
   ],
