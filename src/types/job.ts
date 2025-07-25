@@ -10,4 +10,10 @@ export interface Job {
   endDate: Timestamp;
   totalAnnotators: number;
   answers?: Map<string, string[]>;
+  dataset?: DataPoint[];
+}
+
+export interface DataPoint {
+  choices: string[];
+  text: string;
 }
