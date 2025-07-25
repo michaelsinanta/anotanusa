@@ -9,6 +9,7 @@ import {
 import useUserSession from "@/hooks/firebase/useUserSession";
 import { signOut } from "@/lib/firebase/client/auth";
 import { User } from "firebase/auth";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
@@ -25,8 +26,9 @@ export function Header({ initialUser }: HeaderProps) {
 
   return (
     <header className="flex h-16 items-center justify-between gap-4 p-4">
-      <Link href="/" className="text-2xl font-semibold">
-        AnotaNusa
+      <Link href="/" className="flex items-center gap-1">
+        <Image src="/logo.svg" alt="Logo" width={36} height={36} />
+        <span className="text-2xl font-bold">AnotaNusa</span>
       </Link>
       {user ? <UserInfo user={user} /> : <AuthButtons />}
     </header>
