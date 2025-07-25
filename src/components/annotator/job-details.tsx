@@ -138,7 +138,7 @@ export default function JobDetailsDialog({
             <div className="rounded-lg border p-4">
               <div className="mb-3 flex items-center justify-between">
                 <span className="font-medium text-gray-900">
-                  Current Participants
+                  Current Contributors
                 </span>
                 <span className="text-sm text-gray-500">
                   {job.answers?.size} / {job.totalAnnotators} participants
@@ -187,7 +187,7 @@ export default function JobDetailsDialog({
                   <Users className="h-5 w-5 text-purple-600" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-500">Participants</div>
+                  <div className="text-sm text-gray-500">Contributors</div>
                   <div className="font-semibold">
                     {job.totalAnnotators} annotators
                   </div>
