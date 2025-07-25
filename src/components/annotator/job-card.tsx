@@ -183,7 +183,7 @@ export default function JobCard({ job }: { job: Job }) {
           <div className="flex gap-2">
             <Button asChild className="flex-1">
               <Link href={`/annotator/job/${job.id}`}>
-                {userProgressPercentage > 0 ? "Continue Work" : "Start Work"}
+                {userProgress > 0 ? "Continue Work" : "Start Work"}
               </Link>
             </Button>
             <Button
