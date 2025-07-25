@@ -132,13 +132,6 @@ export default function useAnnotatorRanking(
       if (autoSaveTimeout) {
         clearTimeout(autoSaveTimeout);
       }
-
-      // Set new auto-save timeout (save after 2 seconds of inactivity)
-      const timeout = setTimeout(() => {
-        saveRankings();
-      }, 2000);
-
-      setAutoSaveTimeout(timeout);
     },
     [userId, autoSaveTimeout],
   );

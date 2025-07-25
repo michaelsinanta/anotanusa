@@ -22,21 +22,6 @@ import { db } from "@/lib/firebase/client/clientApp";
 import { useUser } from "@/hooks/firebase/useUser";
 import { getDoc, doc } from "firebase/firestore";
 
-interface TextRankingFormProps {
-  id: string;
-  title?: string;
-  description?: string;
-  dataset: Array<{
-    id: number;
-    text: string;
-    options: Array<{
-      id: number;
-      label: string;
-    }>;
-  }>;
-  userId?: string;
-}
-
 export default function TextRankingForm() {
   const router = useRouter();
   const params = useParams();
@@ -98,7 +83,6 @@ export default function TextRankingForm() {
 
   const currentDataPoint = jobs?.dataset?.[currentQuestion - 1];
   const labelResults = currentDataPoint?.choices;
-  console.log(labelResults);
 
   // Initialize ranking if empty
   useEffect(() => {
@@ -153,8 +137,6 @@ export default function TextRankingForm() {
 
   const resetRanking = useCallback(() => {
     const originalOrder = labelResults?.map((_, index) => index);
-    console.log(originalOrder);
-    console.log(currentRanking);
     if (originalOrder) {
       setRanking(currentQuestion - 1, originalOrder);
     }
