@@ -10,13 +10,13 @@ import {
   Target,
   Users,
   Calendar,
-  CheckCircle,
   DollarSign,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import JobDetailsDialog from "./job-details";
 import { Job } from "@/types/job";
+import { useUser } from "@/hooks/firebase/useUser";
 
 function getDollarBadge(creditPerTask: number) {
   if (creditPerTask >= 10) {
@@ -44,16 +44,17 @@ function getDollarBadge(creditPerTask: number) {
 }
 
 export default function JobCard({ job }: { job: Job }) {
+  const user = useUser();
   const dueDate = new Date(job.endDate.getTime() + 1000 * 60 * 60 * 24 * 7);
   const isOverdue = new Date() > dueDate;
   const daysUntilDue = Math.ceil(
     (dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
   );
-  const myProgressPercentage = job.answers
-    ? Math.round((job.answers.size / job.totalParticipants) * 100)
-    : 0;
+  const userProgress = job.answers?.get(user?.uid ?? "")?.length ?? 0;
+  const userProgressPercentage = Math.round(
+    (userProgress / job.totalParticipants) * 100,
+  );
   const creditPerTask = job.totalCredits / job.totalParticipants;
-  const [open, setOpen] = useState(false);
 
   const [showDetails, setShowDetails] = useState(false);
 
@@ -105,17 +106,17 @@ export default function JobCard({ job }: { job: Job }) {
         </div>
 
         {/* My Progress */}
-        {myProgressPercentage > 0 && (
+        {userProgress > 0 && user?.uid === job.creator && (
           <div className="mb-4 rounded-lg bg-blue-50 p-3">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm font-medium text-blue-900">
                 My Progress
               </span>
               <span className="text-sm text-blue-700">
-                {myProgressPercentage}%
+                {userProgressPercentage}%
               </span>
             </div>
-            <Progress value={myProgressPercentage} className="mb-1 h-2" />
+            <Progress value={userProgress} className="mb-1 h-2" />
           </div>
         )}
 
@@ -157,7 +158,7 @@ export default function JobCard({ job }: { job: Job }) {
         <div className="flex gap-2">
           <Button asChild className="flex-1">
             <Link href={`/annotator/job/${job.id}`}>
-              {myProgressPercentage > 0
+              {userProgressPercentage > 0
                 ? "Continue Work"
                 : "Take Preliminary Test"}
             </Link>
