@@ -27,7 +27,6 @@ export function JobList() {
         const projects = projectsSnapshot.docs.map((doc) => {
           const data = doc.data();
           const answersObj = data.answers ?? {};
-          console.log(data.endDate);
           return {
             id: doc.id,
             name: data.title ?? "Untitled",
@@ -38,6 +37,7 @@ export function JobList() {
             endDate: data.endDate ? data.endDate : Timestamp.now(),
             totalAnnotators: data.totalAnnotators ?? 0,
             answers: new Map(Object.entries(answersObj)),
+            dataset: data.dataset ?? [],
           } as unknown as Job;
         });
         setJobs(projects);

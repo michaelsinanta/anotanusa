@@ -52,7 +52,7 @@ export default function JobCard({ job }: { job: Job }) {
   );
   const userProgress = job.answers?.get(user?.uid ?? "")?.length ?? 0;
   const userProgressPercentage = Math.round(
-    (userProgress / job.totalAnnotators) * 100,
+    (userProgress / (job.dataset?.length ?? 0)) * 100,
   );
   const creditPerTask = job.totalCredits / job.totalAnnotators;
 
@@ -104,7 +104,10 @@ export default function JobCard({ job }: { job: Job }) {
             className="mb-1 h-2"
           />
           <div className="text-xs text-gray-600">
-            {((job.answers?.size || 0) / job.totalAnnotators) * 100}%
+            {(((job.answers?.size || 0) / job.totalAnnotators) * 100).toFixed(
+              2,
+            )}
+            %
           </div>
         </div>
 
@@ -159,22 +162,24 @@ export default function JobCard({ job }: { job: Job }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2">
-          <Button asChild className="flex-1">
-            <Link href={`/annotator/job/${job.id}`}>
-              {userProgressPercentage > 0
-                ? "Continue Work"
-                : "Take Preliminary Test"}
-            </Link>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowDetails(true)}
-          >
-            Details
-          </Button>
-        </div>
+        {userProgressPercentage < 100 && (
+          <div className="flex gap-2">
+            <Button asChild className="flex-1">
+              <Link href={`/annotator/job/${job.id}`}>
+                {userProgressPercentage > 0
+                  ? "Continue Work"
+                  : "Take Preliminary Test"}
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowDetails(true)}
+            >
+              Details
+            </Button>
+          </div>
+        )}
 
         {/* Creator Info */}
         {/* TODO : Modify creator info */}
@@ -182,11 +187,14 @@ export default function JobCard({ job }: { job: Job }) {
           Created by <span className="font-medium">{job.creator}</span>
         </div>
       </CardContent>
-      <JobDetailsDialog
-        job={job}
-        open={showDetails}
-        onOpenChange={setShowDetails}
-      />
+      {user && (
+        <JobDetailsDialog
+          job={job}
+          open={showDetails}
+          onOpenChange={setShowDetails}
+          user={user}
+        />
+      )}
     </Card>
   );
 }

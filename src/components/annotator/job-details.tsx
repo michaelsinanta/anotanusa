@@ -26,11 +26,13 @@ import {
   DollarSign,
 } from "lucide-react";
 import { Job } from "@/types/job";
+import { User } from "firebase/auth";
 
 interface JobDetailsDialogProps {
   job: Job | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  user: User;
 }
 
 function getDollarBadge(creditPerTask: number) {
@@ -61,6 +63,7 @@ function getDollarBadge(creditPerTask: number) {
 export default function JobDetailsDialog({
   job,
   open,
+  user,
   onOpenChange,
 }: JobDetailsDialogProps) {
   if (!job) return null;
@@ -70,9 +73,10 @@ export default function JobDetailsDialog({
   const daysUntilDue = Math.ceil(
     (dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
   );
-  const myProgressPercentage = job.answers
-    ? Math.round((job.answers.size / job.totalAnnotators) * 100)
-    : 0;
+  const userProgress = job.answers?.get(user?.uid ?? "")?.length ?? 0;
+  const userProgressPercentage = Math.round(
+    (userProgress / (job.dataset?.length ?? 0)) * 100,
+  );
   const creditPerTask = (job.totalCredits / job.totalAnnotators).toFixed(2);
 
   return (
@@ -147,17 +151,17 @@ export default function JobDetailsDialog({
             </div>
 
             {/* My Progress */}
-            {myProgressPercentage > 0 && (
+            {userProgressPercentage > 0 && (
               <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="font-medium text-blue-900">
                     My Contribution
                   </span>
                   <span className="text-sm text-blue-700">
-                    {myProgressPercentage}%
+                    {userProgressPercentage}%
                   </span>
                 </div>
-                <Progress value={myProgressPercentage} className="mb-2 h-3" />
+                <Progress value={userProgressPercentage} className="mb-2 h-3" />
               </div>
             )}
           </div>
@@ -232,7 +236,7 @@ export default function JobDetailsDialog({
           <div className="flex gap-3">
             <>
               <Button className="flex-1" size="lg">
-                {myProgressPercentage > 0
+                {userProgressPercentage > 0
                   ? "Continue Work"
                   : "Take Preliminary Test"}
               </Button>
