@@ -8,6 +8,7 @@ import { type ActionState } from "@/lib/types/state";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import z from "zod";
 import { getAuthenticatedAppForUser } from "../firebase/server/serverApp";
+import Papa from "papaparse";
 
 export async function createProject(
   prevstate: ActionState<FlattenedCreateProjectErrors>,
@@ -37,23 +38,14 @@ export async function createProject(
   }
 
   try {
-    // Processing CSV Columns
     const file = data.file as File;
 
-    // Read and parse CSV file
     const csvText = await file.text();
-    const lines = csvText.split("\n").filter((line) => line.trim() !== "");
-
-    // Process CSV rows
-    const processedData = lines.map((line) => {
-      const columns = line.split(",").map((col) => col.trim());
+    const parsed = Papa.parse(csvText, { header: false });
+    const processedData = parsed.data.slice(1).map((columns: string[]) => {
       const text = columns[0] || "";
       const choices = columns.slice(1).filter((choice) => choice !== "");
-
-      return {
-        text: text,
-        choices: choices,
-      };
+      return { text, choices };
     });
 
     const { firebaseServerApp, currentUser } =
