@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/lib/actions/creator";
-import { ArrowLeft, FileText, Target } from "lucide-react";
+import { ArrowLeft, Crown, FileText, Target } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
@@ -116,6 +116,12 @@ export default function NewProjectPage() {
                           <div className="flex items-center gap-2">
                             <Target className="h-4 w-4" />
                             Text Classification
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="text-ranking">
+                          <div className="flex items-center gap-2">
+                            <Crown className="h-4 w-4" />
+                            Text Ranking
                           </div>
                         </SelectItem>
                       </SelectContent>
