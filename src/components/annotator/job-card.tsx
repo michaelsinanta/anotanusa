@@ -110,10 +110,10 @@ export default function JobCard({ job }: { job: Job }) {
         <div className="mb-4">
           <div className="mb-2 flex items-center justify-between">
             <span className="text-sm font-medium text-gray-700">
-              Current Participants
+              Current Contributors
             </span>
             <span className="text-sm text-gray-500">
-              {job.answers?.size}/{job.totalAnnotators} participants
+              {job.answers?.size}/{job.totalAnnotators} contributors
             </span>
           </div>
           <Progress
@@ -154,7 +154,7 @@ export default function JobCard({ job }: { job: Job }) {
           </div>
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-400" />
-            <span className="text-gray-600">Participants:</span>
+            <span className="text-gray-600">Contributors:</span>
             <span className="font-medium">{job.totalAnnotators}</span>
           </div>
           <div className="flex items-center gap-2">
