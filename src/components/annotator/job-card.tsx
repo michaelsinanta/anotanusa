@@ -1,6 +1,11 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardFooter,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,10 +19,11 @@ import {
   Crown,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import JobDetailsDialog from "./job-details";
 import { Job } from "@/types/job";
 import { useUser } from "@/hooks/firebase/useUser";
+import { getUserById } from "@/lib/firebase/client/clientApp";
 
 function getDollarBadge(creditPerTask: number) {
   if (creditPerTask >= 10) {
@@ -58,9 +64,27 @@ export default function JobCard({ job }: { job: Job }) {
   const creditPerTask = job.totalCredits / job.totalAnnotators;
 
   const [showDetails, setShowDetails] = useState(false);
+  const [creatorName, setCreatorName] = useState<string | null>(null);
+  const [creatorLoading, setCreatorLoading] = useState(false);
+
+  useEffect(() => {
+    let ignore = false;
+    async function fetchCreator() {
+      setCreatorLoading(true);
+      const creator = await getUserById(job?.creator);
+      if (!ignore) {
+        setCreatorName(creator?.displayName);
+        setCreatorLoading(false);
+      }
+    }
+    fetchCreator();
+    return () => {
+      ignore = true;
+    };
+  }, [job.creator]);
 
   return (
-    <Card className="transition-all duration-200 hover:shadow-lg">
+    <Card className="flex h-full flex-col transition-all duration-200 hover:shadow-lg">
       <CardHeader className="pb-0">
         <div className="mb-1 flex items-start justify-between">
           <div className="flex-1">
@@ -105,7 +129,7 @@ export default function JobCard({ job }: { job: Job }) {
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0">
+      <CardContent className="flex-1 pt-0">
         {/* Project Progress */}
         <div className="mb-4">
           <div className="mb-2 flex items-center justify-between">
@@ -195,13 +219,10 @@ export default function JobCard({ job }: { job: Job }) {
             </Button>
           </div>
         )}
-
-        {/* Creator Info */}
-        {/* TODO : Modify creator info */}
-        <div className="mt-3 border-t pt-3 text-xs text-gray-500">
-          Created by <span className="font-medium">{job.creator}</span>
-        </div>
       </CardContent>
+      <CardFooter className="border-t pt-2 text-xs text-gray-500">
+        Created by&nbsp;<span className="font-medium">{creatorName}</span>
+      </CardFooter>
       {user && (
         <JobDetailsDialog
           job={job}

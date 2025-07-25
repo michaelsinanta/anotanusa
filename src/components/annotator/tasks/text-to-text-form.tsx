@@ -22,6 +22,7 @@ import { useUser } from "@/hooks/firebase/useUser";
 import useAnnotatorTextToText from "@/hooks/firebase/useAnnotatorTextToText";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TextClassificationForm() {
   const params = useParams();
@@ -81,7 +82,14 @@ export default function TextClassificationForm() {
     loadingCompleted,
   } = useAnnotatorTextToText(jobId, datasetLength, userId);
 
-  if (loadingJob || loading || loadingCompleted) return <div>Loading...</div>;
+  if (loadingJob || loading || loadingCompleted)
+    return (
+      <div className="grid gap-4">
+        {[...Array(3)].map((_, i) => (
+          <Skeleton key={i} className="h-full w-full" />
+        ))}
+      </div>
+    );
   if (errorJob || error)
     return <div className="text-red-500">{errorJob || error}</div>;
   if (!user)
