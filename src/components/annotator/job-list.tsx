@@ -32,7 +32,7 @@ export function JobList() {
             name: data.title ?? "Untitled",
             type: data.annotationTask ?? "text-classification",
             description: data.description ?? "",
-            creator: data.creator ?? "",
+            creator: data.creatorId ?? "",
             totalCredits: data.totalCredits ?? 0,
             endDate: data.endDate ? data.endDate : Timestamp.now(),
             totalAnnotators: data.totalAnnotators ?? 0,

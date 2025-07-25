@@ -108,7 +108,7 @@ export async function createOrUpdateUserDocument({
   email: string;
   annotations?: string[];
   projects?: string[];
-  wallet?: Record<string, string>;
+  wallet?: { rupiah?: string; number?: string; service?: string };
 }) {
   try {
     const { firebaseServerApp } = await getAuthenticatedAppForUser();
@@ -122,7 +122,11 @@ export async function createOrUpdateUserDocument({
         lastLogin: new Date().toISOString(),
         annotations,
         projects,
-        wallet,
+        wallet: {
+          rupiah: wallet.rupiah || "0",
+          number: wallet.number || "",
+          service: wallet.service || "",
+        },
       },
       { merge: true },
     );

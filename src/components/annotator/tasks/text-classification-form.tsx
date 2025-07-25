@@ -44,7 +44,7 @@ export default function TextClassificationForm() {
             name: data.title ?? "Untitled",
             type: data.annotationTask ?? "text-classification",
             description: data.description ?? "",
-            creator: data.creator ?? "",
+            creator: data.creatorId ?? "",
             totalCredits: data.credit ?? 0,
             endDate: data.dueDate ? new Date(data.dueDate) : new Date(),
             totalParticipants: data.totalAnnotator ?? 0,
