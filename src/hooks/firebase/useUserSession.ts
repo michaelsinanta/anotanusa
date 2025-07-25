@@ -23,7 +23,7 @@ export default function useUserSession(initialUser: User) {
         return;
       }
 
-      window.location.reload();
+      window.location.replace("/annotator");
     });
   }, [initialUser]);
 
