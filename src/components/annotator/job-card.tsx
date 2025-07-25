@@ -45,16 +45,18 @@ function getDollarBadge(creditPerTask: number) {
 
 export default function JobCard({ job }: { job: Job }) {
   const user = useUser();
-  const dueDate = new Date(job.endDate.getTime() + 1000 * 60 * 60 * 24 * 7);
+  const dueDate = new Date(
+    job.endDate.toDate().getTime() + 1000 * 60 * 60 * 24 * 7,
+  );
   const isOverdue = new Date() > dueDate;
   const daysUntilDue = Math.ceil(
     (dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
   );
   const userProgress = job.answers?.get(user?.uid ?? "")?.length ?? 0;
   const userProgressPercentage = Math.round(
-    (userProgress / job.totalParticipants) * 100,
+    (userProgress / job.totalAnnotators) * 100,
   );
-  const creditPerTask = job.totalCredits / job.totalParticipants;
+  const creditPerTask = job.totalCredits / job.totalAnnotators;
 
   const [showDetails, setShowDetails] = useState(false);
 
@@ -96,12 +98,15 @@ export default function JobCard({ job }: { job: Job }) {
               Current Participants
             </span>
             <span className="text-sm text-gray-500">
-              {job.answers?.size}/{job.totalParticipants} tasks
+              {job.answers?.size}/{job.totalAnnotators} participants
             </span>
           </div>
-          <Progress value={job.answers?.size} className="mb-1 h-2" />
+          <Progress
+            value={((job.answers?.size || 0) / job.totalAnnotators) * 100}
+            className="mb-1 h-2"
+          />
           <div className="text-xs text-gray-600">
-            {((job.answers?.size || 0) / job.totalParticipants) * 100}%
+            {((job.answers?.size || 0) / job.totalAnnotators) * 100}%
           </div>
         </div>
 
@@ -132,7 +137,7 @@ export default function JobCard({ job }: { job: Job }) {
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-400" />
             <span className="text-gray-600">Participants:</span>
-            <span className="font-medium">{job.totalParticipants}</span>
+            <span className="font-medium">{job.totalAnnotators}</span>
           </div>
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-gray-400" />

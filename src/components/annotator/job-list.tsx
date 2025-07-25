@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import JobCard from "./job-card";
 import JobFilters from "./job-filter";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/client/clientApp";
 import { Job } from "@/types/job";
 
@@ -34,9 +34,9 @@ export function JobList() {
             type: data.annotationTask ?? "text-classification",
             description: data.description ?? "",
             creator: data.creator ?? "",
-            totalCredits: data.credit ?? 0,
-            endDate: data.dueDate ? new Date(data.dueDate) : new Date(),
-            totalParticipants: data.totalAnnotator ?? 0,
+            totalCredits: data.totalCredits ?? 0,
+            endDate: data.endDate ? data.endDate : Timestamp.now(),
+            totalAnnotators: data.totalAnnotators ?? 0,
             answers: new Map(Object.entries(answersObj)),
           } as unknown as Job;
         });
@@ -57,7 +57,7 @@ export function JobList() {
         search === "" ||
         job.name.toLowerCase().includes(search.toLowerCase()) ||
         job.description.toLowerCase().includes(search.toLowerCase());
-      const matchesType = type === "" || job.type === type;
+      const matchesType = type === "all" || job.type === type;
       return matchesSearch && matchesType;
     });
   }, [jobs, search, type]);
