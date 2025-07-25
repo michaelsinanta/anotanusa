@@ -55,7 +55,9 @@ export default async function CreatorDashboard() {
             type: data.type,
           };
 
-          return <TaskCard key={project.id} data={taskData} />;
+          return (
+            <TaskCard key={project.id} docRef={project.id} data={taskData} />
+          );
         })}
       </div>
     </div>

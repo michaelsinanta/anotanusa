@@ -74,6 +74,9 @@ function Navigation() {
         <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" sideOffset={8} align="end">
+        <DropdownMenuItem>
+          <Link href="/annotator">Home</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

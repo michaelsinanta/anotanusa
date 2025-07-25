@@ -8,29 +8,28 @@ import { CalendarDays, Coins, Eye, Users } from "lucide-react";
 import Link from "next/link";
 
 interface TaskCardProps {
+  docRef: string;
   data: TaskData;
 }
 
-export default function TaskCard({ data }: TaskCardProps) {
+export default function TaskCard({ docRef, data }: TaskCardProps) {
   const progressPercentage =
     (data.currentAnnotators / data.totalAnnotators) * 100;
 
   const projectIsValid =
-    !data.endEarly ||
-    new Date(data.endDate) > new Date() ||
+    !data.endEarly &&
+    new Date(data.endDate) > new Date() &&
     data.currentAnnotators < data.totalAnnotators;
 
   return (
-    <Card className="w-full gap-2 border-0 bg-card/50 shadow-sm backdrop-blur-sm">
+    <Card className="w-full justify-between gap-2 border-0 bg-card/50 shadow-sm backdrop-blur-sm">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div>
             <CardTitle className="flex gap-2 text-base leading-tight font-semibold">
               {data.title}
             </CardTitle>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-              {data.description}
-            </p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground"></p>
           </div>
 
           <div className="flex flex-col gap-1">
@@ -40,16 +39,14 @@ export default function TaskCard({ data }: TaskCardProps) {
                 "bg-red-100 text-red-800": !projectIsValid,
               })}
             >
-              {data.endEarly ||
-              (data.endDate && new Date(data.endDate) <= new Date())
-                ? "Ended"
-                : "Active"}
+              {data.endEarly || projectIsValid ? "Active" : "Ended"}
             </Badge>
             <Badge
               className={cn({
                 "bg-blue-100 text-blue-800": data.type === "text-to-text",
                 "bg-yellow-100 text-yellow-800":
                   data.type === "text-classification",
+                "bg-purple-100 text-purple-800": data.type === "text-ranking",
               })}
             >
               {data.type}
@@ -88,7 +85,7 @@ export default function TaskCard({ data }: TaskCardProps) {
 
         <div className="flex items-center justify-end">
           <Link
-            href={`/creator/tasks/${data.creatorId}`}
+            href={`/creator/tasks/${docRef}`}
             className="group inline-flex items-center gap-1.5 text-xs text-primary transition-colors hover:text-primary/80"
           >
             <Eye className="h-3 w-3 transition-transform group-hover:scale-110" />

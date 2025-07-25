@@ -4,7 +4,7 @@ export type TaskData = {
     text: string;
     choices: string[];
   }[];
-  answers: object;
+  answers: Record<string, string[]>;
   description: string;
   endDate: string;
   title: string;
@@ -12,5 +12,5 @@ export type TaskData = {
   totalAnnotators: number;
   currentAnnotators: number;
   endEarly: boolean;
-  type: "text-to-text" | "text-classification";
+  type: "text-to-text" | "text-classification" | "text-ranking";
 };
