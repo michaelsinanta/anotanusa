@@ -8,10 +8,11 @@ import { CalendarDays, Coins, Eye, Users } from "lucide-react";
 import Link from "next/link";
 
 interface TaskCardProps {
+  docRef: string;
   data: TaskData;
 }
 
-export default function TaskCard({ data }: TaskCardProps) {
+export default function TaskCard({ docRef, data }: TaskCardProps) {
   const progressPercentage =
     (data.currentAnnotators / data.totalAnnotators) * 100;
 
@@ -86,7 +87,7 @@ export default function TaskCard({ data }: TaskCardProps) {
 
         <div className="flex items-center justify-end">
           <Link
-            href={`/creator/tasks/${data.creatorId}`}
+            href={`/creator/tasks/${docRef}`}
             className="group inline-flex items-center gap-1.5 text-xs text-primary transition-colors hover:text-primary/80"
           >
             <Eye className="h-3 w-3 transition-transform group-hover:scale-110" />
