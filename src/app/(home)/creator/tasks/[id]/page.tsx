@@ -125,7 +125,7 @@ export default async function TaskPage({
   }
 }
 
-export function ClassificationTaskPage({
+function ClassificationTaskPage({
   taskData,
   projectIsValid,
   currentAnnotators,
@@ -551,7 +551,7 @@ export function ClassificationTaskPage({
   );
 }
 
-export function RankedTaskPage({
+function RankedTaskPage({
   taskData,
   projectIsValid,
   currentAnnotators,
@@ -1164,7 +1164,7 @@ export function RankedTaskPage({
   );
 }
 
-export function TextToTextTaskPage({
+function TextToTextTaskPage({
   taskData,
   projectIsValid,
   currentAnnotators,
