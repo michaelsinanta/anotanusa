@@ -8,7 +8,6 @@ import { type ActionState } from "@/lib/types/state";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import z from "zod";
 import { getAuthenticatedAppForUser } from "../firebase/server/serverApp";
-import { redirect } from "next/navigation";
 
 export async function createProject(
   prevstate: ActionState<FlattenedCreateProjectErrors>,
@@ -68,20 +67,20 @@ export async function createProject(
       };
     }
 
-    await addDoc(
-      collection(getFirestore(firebaseServerApp), "anotanusa-project"),
-      {
-        creatorId: currentUser.uid,
-        dataset: processedData,
-        answer: {},
-        description: result.data.description,
-        endDate: result.data.dueDate,
-        title: result.data.title,
-        totalCredits: result.data.reward,
-        totalAnnotators: result.data.maxContributors,
-        isActive: true,
-      },
-    );
+    const db = getFirestore(firebaseServerApp);
+
+    await addDoc(collection(db, "anotanusa-project"), {
+      type: result.data.annotationTask,
+      creatorId: currentUser.uid,
+      dataset: processedData,
+      answers: {},
+      description: result.data.description,
+      endDate: result.data.dueDate.toISOString(),
+      title: result.data.title,
+      totalCredits: result.data.reward,
+      totalAnnotators: result.data.maxContributors,
+      earlyEnd: false,
+    });
 
     return {
       message: "Project created successfully!",
