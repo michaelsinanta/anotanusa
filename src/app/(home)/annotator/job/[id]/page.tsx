@@ -7,10 +7,12 @@ import { db } from "@/lib/firebase/client/clientApp";
 import TextClassificationForm from "@/components/annotator/tasks/text-classification-form";
 import { AlertTriangle } from "lucide-react";
 import TextToTextForm from "@/components/annotator/tasks/text-to-text-form";
+import TextRankingForm from "@/components/annotator/tasks/text-ranking-form";
 
 const TASK_COMPONENTS = {
   "text-classification": TextClassificationForm,
   "text-to-text": TextToTextForm,
+  "text-ranking": TextRankingForm,
   // Add other task types here as you implement them
 } as const;
 

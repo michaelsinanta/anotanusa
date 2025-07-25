@@ -13,9 +13,12 @@ import {
   ArrowRight,
   ThumbsUp,
   User,
+  BrainCircuit,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [currentTask, setCurrentTask] = useState(0);
@@ -179,7 +182,7 @@ export default function Home() {
         className="bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 pt-16"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center lg:grid-cols-2">
+          <div className="grid items-center gap-32 lg:grid-cols-2">
             <div className="space-y-8">
               <div className="space-y-4">
                 <h1 className="text-2xl leading-tight font-bold text-gray-900 lg:text-5xl">
@@ -432,8 +435,9 @@ export default function Home() {
                       High-Quality Datasets
                     </h3>
                     <p className="text-gray-600">
-                      Majority voting and quality control ensure culturally
-                      authentic, reliable datasets for AI training.
+                      Dataset is annotated by native speaker who are experts in
+                      their domains, ensure culturally authentic, reliable
+                      datasets for AI training.
                     </p>
                   </div>
                 </div>
@@ -614,7 +618,11 @@ export default function Home() {
                   <p className="mb-4 text-sm text-green-100">
                     Share your linguistic expertise and earn fair compensation
                   </p>
-                  <Button variant="secondary" className="w-full">
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={() => router.push("/annotator")}
+                  >
                     Start Contributing
                   </Button>
                 </CardContent>
@@ -622,14 +630,18 @@ export default function Home() {
 
               <Card className="border-white/20 bg-white/10 backdrop-blur-sm">
                 <CardContent className="p-6 text-center">
-                  <Database className="mx-auto mb-4 h-12 w-12 text-white" />
+                  <BrainCircuit className="mx-auto mb-4 h-12 w-12 text-white" />
                   <h3 className="mb-2 text-xl font-bold text-white">
                     For Researchers/Creators
                   </h3>
                   <p className="mb-4 text-sm text-green-100">
                     Collect high-quality datasets for your AI projects
                   </p>
-                  <Button variant="secondary" className="w-full">
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={() => router.push("/creator")}
+                  >
                     Create Project
                   </Button>
                 </CardContent>
