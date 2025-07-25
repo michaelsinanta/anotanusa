@@ -30,7 +30,7 @@ export function JobList() {
           return {
             id: doc.id,
             name: data.title ?? "Untitled",
-            type: data.annotationTask ?? "text-classification",
+            type: data.type ?? "text-classification",
             description: data.description ?? "",
             creator: data.creator ?? "",
             totalCredits: data.totalCredits ?? 0,
