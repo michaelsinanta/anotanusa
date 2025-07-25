@@ -21,16 +21,14 @@ export default function TaskCard({ data }: TaskCardProps) {
     data.currentAnnotators < data.totalAnnotators;
 
   return (
-    <Card className="w-full gap-2 border-0 bg-card/50 shadow-sm backdrop-blur-sm">
+    <Card className="w-full justify-between gap-2 border-0 bg-card/50 shadow-sm backdrop-blur-sm">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div>
             <CardTitle className="flex gap-2 text-base leading-tight font-semibold">
               {data.title}
             </CardTitle>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-              {data.description}
-            </p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground"></p>
           </div>
 
           <div className="flex flex-col gap-1">
