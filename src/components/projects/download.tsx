@@ -353,3 +353,102 @@ export function DownloadRankedTaskData({ taskData }: { taskData: TaskData }) {
     </div>
   );
 }
+
+export function TextToTextDownloadButton({ taskData }: { taskData: TaskData }) {
+  const downloadCSV = () => {
+    const csvRows = [];
+
+    // Header row
+    const headers = ["Item", "Input_Text", "Response"];
+    csvRows.push(headers.join(","));
+
+    // Data rows
+    taskData.dataset.forEach((item, itemIndex) => {
+      // Get all responses for this item
+      Object.entries(taskData.answers as Record<string, string[]>).forEach(
+        ([userId, userAnswers]) => {
+          if (userAnswers[itemIndex]) {
+            const response = userAnswers[itemIndex];
+
+            const row = [
+              itemIndex + 1,
+              `"${item.text.replace(/"/g, '""')}"`, // Escape quotes in text
+              `"${response.replace(/"/g, '""')}"`, // Escape quotes in response
+            ];
+            csvRows.push(row.join(","));
+          }
+        },
+      );
+    });
+
+    // Download CSV
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${taskData.title}_text_responses.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const downloadJSON = () => {
+    const jsonData = taskData.dataset.map((item, itemIndex) => {
+      // Get all responses for this item
+      const responses: string[] = [];
+
+      Object.values(taskData.answers as Record<string, string[]>).forEach(
+        (userAnswers) => {
+          if (userAnswers[itemIndex]) {
+            responses.push(userAnswers[itemIndex]);
+          }
+        },
+      );
+
+      return {
+        item: itemIndex + 1,
+        inputText: item.text,
+        responses,
+      };
+    });
+
+    // Download JSON
+    const jsonContent = JSON.stringify(jsonData, null, 2);
+    const blob = new Blob([jsonContent], {
+      type: "application/json;charset=utf-8;",
+    });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${taskData.title}_text_responses.json`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <div className="flex gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={downloadCSV}
+        className="flex items-center gap-1"
+      >
+        <Download className="h-4 w-4" />
+        CSV
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={downloadJSON}
+        className="flex items-center gap-1"
+      >
+        <Download className="h-4 w-4" />
+        JSON
+      </Button>
+    </div>
+  );
+}

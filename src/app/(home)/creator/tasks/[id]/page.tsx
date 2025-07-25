@@ -1,6 +1,7 @@
 import {
   DownloadClassificationTask,
   DownloadRankedTaskData,
+  TextToTextDownloadButton,
 } from "@/components/projects/download";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -81,7 +82,16 @@ export default async function TaskPage({
           />
         );
       case "text-to-text":
-        return null;
+        return (
+          <TextToTextTaskPage
+            taskData={taskData}
+            projectIsValid={projectIsValid}
+            currentAnnotators={currentAnnotators}
+            progress={progress}
+            endDate={endDate}
+            isExpired={isExpired}
+          />
+        );
       case "text-ranking":
         return (
           <RankedTaskPage
@@ -93,8 +103,6 @@ export default async function TaskPage({
             isExpired={isExpired}
           />
         );
-      default:
-        break;
     }
   } catch (error) {
     console.error("Error fetching task:", error);
@@ -1142,6 +1150,267 @@ export function RankedTaskPage({
                       ) : (
                         <p className="text-sm text-gray-500 italic">
                           No rankings yet
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export function TextToTextTaskPage({
+  taskData,
+  projectIsValid,
+  currentAnnotators,
+  progress,
+  endDate,
+  isExpired,
+}: {
+  taskData: TaskData;
+  projectIsValid: boolean;
+  currentAnnotators: number;
+  progress: number;
+  endDate: Date;
+  isExpired: boolean;
+}) {
+  return (
+    <div className="mx-auto max-w-4xl p-8">
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {taskData.title}
+            </h1>
+            <p className="mt-2 text-lg text-gray-600">{taskData.description}</p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <Badge
+              className={cn({
+                "bg-green-100 text-green-800": projectIsValid,
+                "bg-red-100 text-red-800": !projectIsValid,
+              })}
+            >
+              {taskData.endEarly || projectIsValid ? "Active" : "Ended"}
+            </Badge>
+            <Badge
+              className={cn({
+                "bg-blue-100 text-blue-800": taskData.type === "text-to-text",
+                "bg-yellow-100 text-yellow-800":
+                  taskData.type === "text-classification",
+                "bg-purple-100 text-purple-800":
+                  taskData.type === "text-ranking",
+              })}
+            >
+              {taskData.type}
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Credits</CardTitle>
+            <Coins className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {taskData.totalCredits.toLocaleString()}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Annotators</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {currentAnnotators} / {taskData.totalAnnotators}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {progress.toFixed(1)}% complete
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Dataset Size</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{taskData.dataset.length}</div>
+            <div className="text-xs text-muted-foreground">items</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">End Date</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {endDate.toLocaleDateString()}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {isExpired
+                ? "Expired"
+                : `${Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))} days left`}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Response Statistics</CardTitle>
+          <CardDescription>
+            Distribution of user responses across text choices
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {/* Annotator Participation */}
+            <div>
+              <h4 className="mb-3 text-sm font-medium text-gray-700">
+                Annotator Participation
+              </h4>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="rounded-lg bg-blue-50 p-3 text-center">
+                  <div className="text-lg font-semibold text-blue-700">
+                    {
+                      Object.keys(taskData.answers as Record<string, string[]>)
+                        .length
+                    }
+                  </div>
+                  <div className="text-sm text-blue-600">Active Annotators</div>
+                </div>
+                <div className="rounded-lg bg-green-50 p-3 text-center">
+                  <div className="text-lg font-semibold text-green-700">
+                    {(() => {
+                      const userAnswers = Object.values(
+                        taskData.answers as Record<string, string[]>,
+                      );
+                      return userAnswers.length > 0
+                        ? Math.round(
+                            userAnswers.reduce(
+                              (sum, answers) => sum + answers.length,
+                              0,
+                            ) / userAnswers.length,
+                          )
+                        : 0;
+                    })()}
+                  </div>
+                  <div className="text-sm text-green-600">
+                    Avg. Responses per User
+                  </div>
+                </div>
+                <div className="rounded-lg bg-purple-50 p-3 text-center">
+                  <div className="text-lg font-semibold text-purple-700">
+                    {(() => {
+                      const completionRates = Object.values(
+                        taskData.answers as Record<string, string[]>,
+                      ).map(
+                        (answers) =>
+                          (answers.length / taskData.dataset.length) * 100,
+                      );
+                      return completionRates.length > 0
+                        ? Math.round(
+                            completionRates.reduce(
+                              (sum, rate) => sum + rate,
+                              0,
+                            ) / completionRates.length,
+                          )
+                        : 0;
+                    })()}
+                    %
+                  </div>
+                  <div className="text-sm text-purple-600">
+                    Avg. Completion Rate
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Per-item Statistics */}
+            <div>
+              <div className="mb-3 flex items-center justify-between">
+                <h4 className="text-sm font-medium text-gray-700">
+                  Per-Item Response Distribution
+                </h4>
+                <TextToTextDownloadButton taskData={taskData} />
+              </div>
+              <div className="max-h-96 space-y-4 overflow-y-auto">
+                {taskData.dataset.map((item, itemIndex) => {
+                  // Get all responses for this specific item index
+                  const itemResponses: string[] = [];
+                  Object.values(
+                    taskData.answers as Record<string, string[]>,
+                  ).forEach((userAnswers) => {
+                    if (userAnswers[itemIndex]) {
+                      itemResponses.push(userAnswers[itemIndex]);
+                    }
+                  });
+
+                  // Count responses for this item
+                  const itemCounts: Record<string, number> = {};
+                  itemResponses.forEach((response) => {
+                    itemCounts[response] = (itemCounts[response] || 0) + 1;
+                  });
+
+                  const totalItemResponses = itemResponses.length;
+                  const mostPopularResponse = Object.entries(itemCounts).sort(
+                    ([, a], [, b]) => b - a,
+                  )[0];
+
+                  return (
+                    <div key={itemIndex} className="rounded-lg border p-4">
+                      <div className="mb-3">
+                        <div className="mb-2 flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-700">
+                            Item {itemIndex + 1}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline">
+                              {totalItemResponses} responses
+                            </Badge>
+                          </div>
+                        </div>
+                        <p className="truncate text-sm text-gray-600">
+                          {item.text}
+                        </p>
+                      </div>
+
+                      {totalItemResponses > 0 ? (
+                        <div className="space-y-2">
+                          {Object.entries(itemCounts)
+                            .sort(([, a], [, b]) => b - a)
+                            .map(([response, count]) => (
+                              <div
+                                key={response}
+                                className="flex items-center justify-between"
+                              >
+                                <span className="max-w-md truncate text-sm">
+                                  {response}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="secondary">{count}</Badge>
+                                </div>
+                              </div>
+                            ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500 italic">
+                          No responses yet
                         </p>
                       )}
                     </div>
