@@ -236,9 +236,7 @@ export default function JobDetailsDialog({
           <div className="flex gap-3">
             <>
               <Button className="flex-1" size="lg">
-                {userProgressPercentage > 0
-                  ? "Continue Work"
-                  : "Take Preliminary Test"}
+                {userProgressPercentage > 0 ? "Continue Work" : "Start Work"}
               </Button>
               <Button
                 variant="outline"

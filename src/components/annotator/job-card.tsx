@@ -11,6 +11,7 @@ import {
   Users,
   Calendar,
   DollarSign,
+  Crown,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -70,17 +71,33 @@ export default function JobCard({ job }: { job: Job }) {
 
             <div className="mb-1 flex items-center gap-2">
               <Badge variant="secondary" className="text-xs">
-                {job.type === "text-to-text" ? (
-                  <>
-                    <FileText className="mr-1 h-3 w-3" />
-                    Text-to-Text
-                  </>
-                ) : (
-                  <>
-                    <Target className="mr-1 h-3 w-3" />
-                    Text Classification
-                  </>
-                )}
+                {(() => {
+                  switch (job.type) {
+                    case "text-to-text":
+                      return (
+                        <>
+                          <FileText className="mr-1 h-3 w-3" />
+                          Text-to-Text
+                        </>
+                      );
+                    case "text-classification":
+                      return (
+                        <>
+                          <Target className="mr-1 h-3 w-3" />
+                          Text Classification
+                        </>
+                      );
+                    case "text-ranking":
+                      return (
+                        <>
+                          <Crown className="mr-1 h-3 w-3" />
+                          Text Ranking
+                        </>
+                      );
+                    default:
+                      return null;
+                  }
+                })()}
               </Badge>
               {getDollarBadge(creditPerTask)}
             </div>
@@ -166,9 +183,7 @@ export default function JobCard({ job }: { job: Job }) {
           <div className="flex gap-2">
             <Button asChild className="flex-1">
               <Link href={`/annotator/job/${job.id}`}>
-                {userProgressPercentage > 0
-                  ? "Continue Work"
-                  : "Take Preliminary Test"}
+                {userProgressPercentage > 0 ? "Continue Work" : "Start Work"}
               </Link>
             </Button>
             <Button
