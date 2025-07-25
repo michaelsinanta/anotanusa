@@ -5,7 +5,13 @@ import {
   FlattenedCreateProjectErrors,
 } from "@/lib/schema/creator";
 import { type ActionState } from "@/lib/types/state";
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  setDoc,
+  doc,
+} from "firebase/firestore";
 import z from "zod";
 import { getAuthenticatedAppForUser } from "../firebase/server/serverApp";
 import Papa from "papaparse";
@@ -85,6 +91,50 @@ export async function createProject(
       message: "Failed to create project. Please try again later.",
       isError: true,
       isValid: false,
+    };
+  }
+}
+
+export async function createOrUpdateUserDocument({
+  uid,
+  displayName,
+  email,
+  annotations = [],
+  projects = [],
+  wallet = {},
+}: {
+  uid: string;
+  displayName: string;
+  email: string;
+  annotations?: string[];
+  projects?: string[];
+  wallet?: Record<string, string>;
+}) {
+  try {
+    const { firebaseServerApp } = await getAuthenticatedAppForUser();
+    const db = getFirestore(firebaseServerApp);
+    await setDoc(
+      doc(db, "users", uid),
+      {
+        uid,
+        displayName,
+        email,
+        lastLogin: new Date().toISOString(),
+        annotations,
+        projects,
+        wallet,
+      },
+      { merge: true },
+    );
+    return {
+      success: true,
+      message: "User document created/updated successfully.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to create/update user document.",
+      error,
     };
   }
 }
