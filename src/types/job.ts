@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export interface Job {
   id: number;
   name: string;
@@ -7,7 +5,7 @@ export interface Job {
   description: string;
   creator: string;
   totalCredits: number;
-  endDate: Timestamp;
+  endDate: string;
   totalAnnotators: number;
   answers?: Map<string, string[]>;
   dataset?: DataPoint[];

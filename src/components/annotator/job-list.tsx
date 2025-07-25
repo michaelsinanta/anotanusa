@@ -27,6 +27,7 @@ export function JobList() {
         const projects = projectsSnapshot.docs.map((doc) => {
           const data = doc.data();
           const answersObj = data.answers ?? {};
+          console.log(data.endDate);
           return {
             id: doc.id,
             name: data.title ?? "Untitled",

@@ -65,9 +65,7 @@ export default function JobDetailsDialog({
 }: JobDetailsDialogProps) {
   if (!job) return null;
 
-  const dueDate = new Date(
-    job.endDate.toDate().getTime() + 1000 * 60 * 60 * 24 * 7,
-  );
+  const dueDate = new Date(job.endDate);
   const isOverdue = new Date() > dueDate;
   const daysUntilDue = Math.ceil(
     (dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
