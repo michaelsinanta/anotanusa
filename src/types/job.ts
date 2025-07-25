@@ -1,11 +1,13 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Job {
   id: number;
   name: string;
-  type: "text-to-text" | "text-classification";
+  type: string;
   description: string;
   creator: string;
   totalCredits: number;
-  endDate: Date;
-  totalParticipants: number;
+  endDate: Timestamp;
+  totalAnnotators: number;
   answers?: Map<string, string[]>;
 }

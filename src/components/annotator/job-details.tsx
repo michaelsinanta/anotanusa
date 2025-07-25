@@ -65,15 +65,17 @@ export default function JobDetailsDialog({
 }: JobDetailsDialogProps) {
   if (!job) return null;
 
-  const dueDate = new Date(job.endDate.getTime() + 1000 * 60 * 60 * 24 * 7);
+  const dueDate = new Date(
+    job.endDate.toDate().getTime() + 1000 * 60 * 60 * 24 * 7,
+  );
   const isOverdue = new Date() > dueDate;
   const daysUntilDue = Math.ceil(
     (dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
   );
   const myProgressPercentage = job.answers
-    ? Math.round((job.answers.size / job.totalParticipants) * 100)
+    ? Math.round((job.answers.size / job.totalAnnotators) * 100)
     : 0;
-  const creditPerTask = job.totalCredits / job.totalParticipants;
+  const creditPerTask = (job.totalCredits / job.totalAnnotators).toFixed(2);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -105,7 +107,7 @@ export default function JobDetailsDialog({
                 </>
               )}
             </Badge>
-            {getDollarBadge(creditPerTask)}
+            {getDollarBadge(parseFloat(creditPerTask))}
           </div>
         </DialogHeader>
 
@@ -137,12 +139,12 @@ export default function JobDetailsDialog({
                   Current Participants
                 </span>
                 <span className="text-sm text-gray-500">
-                  {job.answers?.size} / {job.totalParticipants} participants
+                  {job.answers?.size} / {job.totalAnnotators} participants
                 </span>
               </div>
               <Progress value={job.answers?.size} className="mb-2 h-3" />
               <div className="text-xs text-gray-600">
-                {((job.answers?.size || 0) / job.totalParticipants) * 100}%
+                {((job.answers?.size || 0) / job.totalAnnotators) * 100}%
               </div>
             </div>
 
@@ -185,7 +187,7 @@ export default function JobDetailsDialog({
                 <div>
                   <div className="text-sm text-gray-500">Participants</div>
                   <div className="font-semibold">
-                    {job.totalParticipants} annotators
+                    {job.totalAnnotators} annotators
                   </div>
                 </div>
               </div>

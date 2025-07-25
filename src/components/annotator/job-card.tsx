@@ -10,13 +10,13 @@ import {
   Target,
   Users,
   Calendar,
-  CheckCircle,
   DollarSign,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import JobDetailsDialog from "./job-details";
 import { Job } from "@/types/job";
+import { useUser } from "@/hooks/firebase/useUser";
 
 function getDollarBadge(creditPerTask: number) {
   if (creditPerTask >= 10) {
@@ -44,16 +44,19 @@ function getDollarBadge(creditPerTask: number) {
 }
 
 export default function JobCard({ job }: { job: Job }) {
-  const dueDate = new Date(job.endDate.getTime() + 1000 * 60 * 60 * 24 * 7);
+  const user = useUser();
+  const dueDate = new Date(
+    job.endDate.toDate().getTime() + 1000 * 60 * 60 * 24 * 7,
+  );
   const isOverdue = new Date() > dueDate;
   const daysUntilDue = Math.ceil(
     (dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
   );
-  const myProgressPercentage = job.answers
-    ? Math.round((job.answers.size / job.totalParticipants) * 100)
-    : 0;
-  const creditPerTask = job.totalCredits / job.totalParticipants;
-  const [open, setOpen] = useState(false);
+  const userProgress = job.answers?.get(user?.uid ?? "")?.length ?? 0;
+  const userProgressPercentage = Math.round(
+    (userProgress / job.totalAnnotators) * 100,
+  );
+  const creditPerTask = job.totalCredits / job.totalAnnotators;
 
   const [showDetails, setShowDetails] = useState(false);
 
@@ -95,30 +98,30 @@ export default function JobCard({ job }: { job: Job }) {
               Current Participants
             </span>
             <span className="text-sm text-gray-500">
-              {job.answers?.size}/{job.totalParticipants} tasks
+              {job.answers?.size}/{job.totalAnnotators} participants
             </span>
           </div>
           <Progress
-            value={((job.answers?.size || 0) / job.totalParticipants) * 100}
+            value={((job.answers?.size || 0) / job.totalAnnotators) * 100}
             className="mb-1 h-2"
           />
           <div className="text-xs text-gray-600">
-            {((job.answers?.size || 0) / job.totalParticipants) * 100}%
+            {((job.answers?.size || 0) / job.totalAnnotators) * 100}%
           </div>
         </div>
 
         {/* My Progress */}
-        {myProgressPercentage > 0 && (
+        {userProgress > 0 && (
           <div className="mb-4 rounded-lg bg-blue-50 p-3">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm font-medium text-blue-900">
                 My Progress
               </span>
               <span className="text-sm text-blue-700">
-                {myProgressPercentage}%
+                {userProgressPercentage}%
               </span>
             </div>
-            <Progress value={myProgressPercentage} className="mb-1 h-2" />
+            <Progress value={userProgressPercentage} className="mb-1 h-2" />
           </div>
         )}
 
@@ -134,7 +137,7 @@ export default function JobCard({ job }: { job: Job }) {
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-400" />
             <span className="text-gray-600">Participants:</span>
-            <span className="font-medium">{job.totalParticipants}</span>
+            <span className="font-medium">{job.totalAnnotators}</span>
           </div>
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-gray-400" />
@@ -161,7 +164,7 @@ export default function JobCard({ job }: { job: Job }) {
         <div className="flex gap-2">
           <Button asChild className="flex-1">
             <Link href={`/annotator/job/${job.id}`}>
-              {myProgressPercentage > 0
+              {userProgressPercentage > 0
                 ? "Continue Work"
                 : "Take Preliminary Test"}
             </Link>
@@ -176,6 +179,7 @@ export default function JobCard({ job }: { job: Job }) {
         </div>
 
         {/* Creator Info */}
+        {/* TODO : Modify creator info */}
         <div className="mt-3 border-t pt-3 text-xs text-gray-500">
           Created by <span className="font-medium">{job.creator}</span>
         </div>
