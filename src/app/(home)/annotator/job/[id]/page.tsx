@@ -42,5 +42,5 @@ export default function AnnotationPage() {
   }, [id]);
   const TaskComponent = TASK_COMPONENTS[type as keyof typeof TASK_COMPONENTS];
 
-  return TaskComponent ? <TaskComponent /> : <UnsupportedTaskType />;
+  return TaskComponent ? <TaskComponent /> : <div />;
 }
