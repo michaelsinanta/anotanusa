@@ -42,12 +42,12 @@ export default function TextClassificationForm() {
           const project = {
             id: docSnap.id,
             name: data.title ?? "Untitled",
-            type: data.annotationTask ?? "text-classification",
+            type: data.type ?? "text-classification",
             description: data.description ?? "",
-            creator: data.creator ?? "",
-            totalCredits: data.credit ?? 0,
-            endDate: data.dueDate ? new Date(data.dueDate) : new Date(),
-            totalParticipants: data.totalAnnotator ?? 0,
+            creator: data.creatorId ?? "",
+            totalCredits: data.totalCredits ?? 0,
+            endDate: data.endDate ? new Date(data.endDate) : new Date(),
+            totalParticipants: data.totalAnnotators ?? 0,
             answers: new Map(Object.entries(data.answers ?? {})),
             dataset: data.dataset ?? [],
           } as unknown as Job;
@@ -88,7 +88,7 @@ export default function TextClassificationForm() {
       <div className="text-red-500">You must be logged in to annotate.</div>
     );
   if (userId && completed[userId]) {
-    router.replace("/annotator/job");
+    router.replace("/annotator");
     return (
       <div className="text-green-600">
         You have completed this test. Redirecting...
@@ -111,7 +111,7 @@ export default function TextClassificationForm() {
   const handleComplete = async () => {
     await saveAnswers();
     await markComplete();
-    router.replace("/annotator/job");
+    router.replace("/annotator");
   };
 
   const progress = (currentQuestion / totalQuestions) * 100;
