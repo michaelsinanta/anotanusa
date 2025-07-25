@@ -168,27 +168,37 @@ export default function Component() {
                   return (
                     <div
                       key={index}
-                      className={`flex items-start space-x-3 rounded-lg border p-4 transition-colors ${
+                      className={`flex cursor-pointer items-center space-x-3 rounded-lg border p-4 transition-colors ${
                         isSelected
                           ? "border-blue-200 bg-blue-50"
                           : "hover:bg-gray-50"
                       }`}
+                      onClick={() => handleOptionChange(choice)}
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ")
+                          handleOptionChange(choice);
+                      }}
+                      role="button"
+                      aria-pressed={isSelected}
                     >
                       <RadioGroupItem
                         value={choice}
                         id={`choice-${index}`}
-                        className="mt-1"
+                        className="mt-0"
+                        checked={isSelected}
+                        onChange={() => handleOptionChange(choice)}
+                        tabIndex={-1} // Prevent double focus
                       />
-                      <div className="flex-1 space-y-1">
-                        <Label
-                          htmlFor={`choice-${index}`}
-                          className="cursor-pointer text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {choice}
-                        </Label>
-                      </div>
+                      <Label
+                        htmlFor={`choice-${index}`}
+                        className="flex-1 cursor-pointer text-center text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        style={{ marginBottom: 0 }}
+                      >
+                        {choice}
+                      </Label>
                       {isSelected && (
-                        <CheckCircle className="mt-1 h-5 w-5 text-blue-600" />
+                        <CheckCircle className="h-5 w-5 text-blue-600" />
                       )}
                     </div>
                   );
