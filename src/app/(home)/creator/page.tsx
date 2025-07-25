@@ -50,7 +50,7 @@ export default async function CreatorDashboard() {
             title: data.title,
             totalCredits: data.totalCredits,
             totalAnnotators: data.totalAnnotators,
-            currentAnnotators: Object.keys(data.answer).length,
+            currentAnnotators: Object.keys(data.answers).length,
             endEarly: data.earlyEnd,
             type: data.type,
           };

@@ -14,6 +14,7 @@ import {
 import { FirebaseError } from "firebase/app";
 
 import { auth } from "@/lib/firebase/client/clientApp";
+import { createOrUpdateUserDocument } from "@/lib/actions/creator";
 
 export type AuthResponse =
   | {
@@ -43,7 +44,14 @@ export async function signInWithGoogle(): Promise<AuthResponse> {
   const provider = new GoogleAuthProvider();
 
   try {
-    await signInWithPopup(auth, provider);
+    const userCredential = await signInWithPopup(auth, provider);
+    const user = userCredential.user;
+    // Save user info to Firestore
+    await createOrUpdateUserDocument({
+      uid: user.uid,
+      displayName: user.displayName || "",
+      email: user.email || "",
+    });
 
     return {
       type: "success",
@@ -63,7 +71,18 @@ export async function signInWithEmailPassword(
   password: string,
 ): Promise<AuthResponse> {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const user = userCredential.user;
+    // Save user info to Firestore
+    await createOrUpdateUserDocument({
+      uid: user.uid,
+      displayName: user.displayName || "",
+      email: user.email || "",
+    });
 
     return {
       type: "success",
@@ -124,6 +143,13 @@ export async function registerWithEmailPassword(
 
     await updateProfile(user, {
       displayName: displayName,
+    });
+
+    // Save user info to Firestore
+    await createOrUpdateUserDocument({
+      uid: user.uid,
+      displayName: displayName,
+      email: user.email || "",
     });
 
     return {
