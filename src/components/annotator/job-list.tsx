@@ -57,7 +57,7 @@ export function JobList() {
         search === "" ||
         job.name.toLowerCase().includes(search.toLowerCase()) ||
         job.description.toLowerCase().includes(search.toLowerCase());
-      const matchesType = type === "all" || job.type === type;
+      const matchesType = type === "all" || job.type === type || type === "";
       return matchesSearch && matchesType;
     });
   }, [jobs, search, type]);

@@ -111,7 +111,7 @@ export default function JobCard({ job }: { job: Job }) {
         </div>
 
         {/* My Progress */}
-        {userProgress > 0 && user?.uid === job.creator && (
+        {userProgress > 0 && (
           <div className="mb-4 rounded-lg bg-blue-50 p-3">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm font-medium text-blue-900">
@@ -121,7 +121,7 @@ export default function JobCard({ job }: { job: Job }) {
                 {userProgressPercentage}%
               </span>
             </div>
-            <Progress value={userProgress} className="mb-1 h-2" />
+            <Progress value={userProgressPercentage} className="mb-1 h-2" />
           </div>
         )}
 
@@ -178,6 +178,7 @@ export default function JobCard({ job }: { job: Job }) {
         </div>
 
         {/* Creator Info */}
+        {/* TODO : Modify creator info */}
         <div className="mt-3 border-t pt-3 text-xs text-gray-500">
           Created by <span className="font-medium">{job.creator}</span>
         </div>
