@@ -48,7 +48,8 @@ export async function createProject(
 
     const csvText = await file.text();
     const parsed = Papa.parse(csvText, { header: false });
-    const processedData = parsed.data.slice(1).map((columns: string[]) => {
+    const processedData = parsed.data.slice(1).map((value) => {
+      const columns = value as string[];
       const text = columns[0] || "";
       const choices = columns.slice(1).filter((choice) => choice !== "");
       return { text, choices };
@@ -108,7 +109,7 @@ export async function createOrUpdateUserDocument({
   email: string;
   annotations?: string[];
   projects?: string[];
-  wallet?: Record<string, string>;
+  wallet?: { rupiah?: string; number?: string; service?: string };
 }) {
   try {
     const { firebaseServerApp } = await getAuthenticatedAppForUser();
@@ -122,7 +123,11 @@ export async function createOrUpdateUserDocument({
         lastLogin: new Date().toISOString(),
         annotations,
         projects,
-        wallet,
+        wallet: {
+          rupiah: wallet.rupiah || "0",
+          number: wallet.number || "",
+          service: wallet.service || "",
+        },
       },
       { merge: true },
     );

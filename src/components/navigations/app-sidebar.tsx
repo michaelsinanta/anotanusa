@@ -37,12 +37,12 @@ const annotatorData = {
   navMain: [
     {
       title: "All Annotations",
-      url: "#",
+      url: "/annotator",
       icon: Folder,
     },
     {
       title: "Your Annotations",
-      url: "#",
+      url: "/annotator/your-annotations",
       icon: Folder,
     },
   ],

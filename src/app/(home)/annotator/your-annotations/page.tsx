@@ -1,21 +1,17 @@
 "use client";
-
 import { useEffect, useState, useMemo } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import JobCard from "./job-card";
-import JobFilters from "./job-filter";
+import { Job } from "@/types/job";
 import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/client/clientApp";
-import { Job } from "@/types/job";
+import JobCard from "@/components/annotator/job-card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useUser } from "@/hooks/firebase/useUser";
 
-export function JobList() {
+export default function YourAnnotationsPage() {
+  const user = useUser();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Add filter/search state
-  const [search, setSearch] = useState("");
-  const [type, setType] = useState("");
 
   useEffect(() => {
     async function fetchJobs() {
@@ -50,17 +46,11 @@ export function JobList() {
     fetchJobs();
   }, []);
 
-  // Filtering logic
+  // Filter jobs to only those where the user has annotated (answers contains user.uid)
   const filteredJobs = useMemo(() => {
-    return jobs.filter((job) => {
-      const matchesSearch =
-        search === "" ||
-        job.name.toLowerCase().includes(search.toLowerCase()) ||
-        job.description.toLowerCase().includes(search.toLowerCase());
-      const matchesType = type === "all" || job.type === type || type === "";
-      return matchesSearch && matchesType;
-    });
-  }, [jobs, search, type]);
+    if (!user) return [];
+    return jobs.filter((job) => job.answers && job.answers.has(user.uid));
+  }, [jobs, user]);
 
   if (loading) {
     return (
@@ -77,20 +67,23 @@ export function JobList() {
   }
 
   return (
-    <div className="w-full">
-      <JobFilters
-        searchTerm={search}
-        onSearchChange={setSearch}
-        selectedType={type}
-        onTypeChange={setType}
-      />
-      <div className="mb-6 text-sm text-muted-foreground">
-        Showing {filteredJobs.length} of {jobs.length} jobs
-      </div>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {filteredJobs.map((job) => (
-          <JobCard key={job.id} job={job} />
-        ))}
+    <div className="flex w-full flex-col items-center justify-center p-6 md:p-10">
+      <div className="w-full">
+        <h1 className="mb-2 text-3xl font-bold">Your Annotations</h1>
+        <p className="mb-6 text-muted-foreground">
+          View your past and in-progress annotation jobs.
+        </p>
+        {filteredJobs.length === 0 ? (
+          <div className="text-center text-muted-foreground">
+            You have not annotated any jobs yet.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {filteredJobs.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

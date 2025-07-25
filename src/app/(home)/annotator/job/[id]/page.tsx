@@ -6,9 +6,11 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/client/clientApp";
 import TextClassificationForm from "@/components/annotator/tasks/text-classification-form";
 import { AlertTriangle } from "lucide-react";
+import TextToTextForm from "@/components/annotator/tasks/text-to-text-form";
 
 const TASK_COMPONENTS = {
   "text-classification": TextClassificationForm,
+  "text-to-text": TextToTextForm,
   // Add other task types here as you implement them
 } as const;
 
@@ -40,5 +42,5 @@ export default function AnnotationPage() {
   }, [id]);
   const TaskComponent = TASK_COMPONENTS[type as keyof typeof TASK_COMPONENTS];
 
-  return TaskComponent ? <TaskComponent /> : <UnsupportedTaskType />;
+  return TaskComponent ? <TaskComponent /> : <div />;
 }

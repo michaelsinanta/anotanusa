@@ -19,8 +19,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Job } from "@/types/job";
 import { useUser } from "@/hooks/firebase/useUser";
-import useAnnotatorAnswers from "@/hooks/firebase/useAnnotatorAnswers";
+import useAnnotatorTextToText from "@/hooks/firebase/useAnnotatorTextToText";
 import { useRouter } from "next/navigation";
+import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TextClassificationForm() {
@@ -45,7 +46,7 @@ export default function TextClassificationForm() {
             name: data.title ?? "Untitled",
             type: data.annotationTask ?? "text-classification",
             description: data.description ?? "",
-            creator: data.creatorId ?? "",
+            creator: data.creator ?? "",
             totalCredits: data.credit ?? 0,
             endDate: data.dueDate ? new Date(data.dueDate) : new Date(),
             totalParticipants: data.totalAnnotator ?? 0,
@@ -67,25 +68,25 @@ export default function TextClassificationForm() {
 
   const {
     answers,
-    setAnswer,
+    setTextResponse,
     saveAnswers,
     currentQuestion,
     setCurrentQuestion,
     goToNext,
     goToPrevious,
-    selectedOption,
+    currentText,
     loading,
     error,
     completed,
     markComplete,
     loadingCompleted,
-  } = useAnnotatorAnswers(jobId, datasetLength, userId);
+  } = useAnnotatorTextToText(jobId, datasetLength, userId);
 
   if (loadingJob || loading || loadingCompleted)
     return (
       <div className="grid gap-4">
         {[...Array(3)].map((_, i) => (
-          <Skeleton key={i} className="h-32 w-full" />
+          <Skeleton key={i} className="h-full w-full" />
         ))}
       </div>
     );
@@ -96,7 +97,7 @@ export default function TextClassificationForm() {
       <div className="text-red-500">You must be logged in to annotate.</div>
     );
   if (userId && completed[userId]) {
-    router.replace("/annotator/job");
+    router.replace("/annotator");
     return (
       <div className="text-green-600">
         You have completed this test. Redirecting...
@@ -107,10 +108,6 @@ export default function TextClassificationForm() {
   const totalQuestions = datasetLength;
   const currentDataPoint = jobs?.dataset?.[currentQuestion - 1];
 
-  const handleOptionChange = (optionId: string) => {
-    setAnswer(currentQuestion - 1, optionId);
-  };
-
   const handleSubmit = async () => {
     await saveAnswers();
     goToNext();
@@ -119,7 +116,7 @@ export default function TextClassificationForm() {
   const handleComplete = async () => {
     await saveAnswers();
     await markComplete();
-    router.replace("/annotator/job");
+    router.replace("/annotator");
   };
 
   const progress = (currentQuestion / totalQuestions) * 100;
@@ -143,14 +140,14 @@ export default function TextClassificationForm() {
           <CardHeader>
             <CardTitle className="text-md">{jobs?.description}</CardTitle>
             <CardDescription>
-              Select the most appropriate option. You can choose only one
-              answer.
+              Fill the text area below with suitable answer using Indonesian
+              Local Language.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="mb-6 rounded-lg bg-gray-100 p-4">
               <p className="mb-2 text-sm font-medium text-gray-600">
-                Text to annotate:
+                Question:
               </p>
               <p className="text-gray-800">{currentDataPoint?.text}</p>
             </div>
@@ -160,49 +157,20 @@ export default function TextClassificationForm() {
         {/* Options Card */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Select applicable labels</CardTitle>
-            <CardDescription>
-              {selectedOption ? "1 option selected" : "No option selected"}
-            </CardDescription>
+            <CardTitle className="text-lg">Fill the text area below</CardTitle>
           </CardHeader>
           <CardContent>
-            <RadioGroup
-              value={selectedOption}
-              onValueChange={handleOptionChange}
-            >
-              <div className="space-y-4">
-                {currentDataPoint?.choices.map((choice, index) => {
-                  const isSelected = selectedOption === choice;
-                  return (
-                    <div
-                      key={index}
-                      className={`flex items-start space-x-3 rounded-lg border p-4 transition-colors ${
-                        isSelected
-                          ? "border-blue-200 bg-blue-50"
-                          : "hover:bg-gray-50"
-                      }`}
-                    >
-                      <RadioGroupItem
-                        value={choice}
-                        id={`choice-${index}`}
-                        className="mt-1"
-                      />
-                      <div className="flex-1 space-y-1">
-                        <Label
-                          htmlFor={`choice-${index}`}
-                          className="cursor-pointer text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {choice}
-                        </Label>
-                      </div>
-                      {isSelected && (
-                        <CheckCircle className="mt-1 h-5 w-5 text-blue-600" />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </RadioGroup>
+            <div className="space-y-3">
+              <Textarea
+                value={currentText}
+                onChange={(e) =>
+                  setTextResponse(currentQuestion - 1, e.target.value)
+                }
+                placeholder="Type your translation or response here..."
+                className="min-h-32 resize-none text-base leading-relaxed focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                rows={4}
+              />
+            </div>
           </CardContent>
         </Card>
 
@@ -218,7 +186,7 @@ export default function TextClassificationForm() {
           {currentQuestion === totalQuestions ? (
             <Button
               onClick={handleComplete}
-              disabled={!selectedOption}
+              disabled={!currentText}
               className="gap-2 bg-green-600 text-white"
             >
               Complete the test
@@ -226,7 +194,7 @@ export default function TextClassificationForm() {
           ) : (
             <Button
               onClick={handleSubmit}
-              disabled={!selectedOption}
+              disabled={!currentText}
               className="gap-2"
             >
               <Save className="h-4 w-4" />
