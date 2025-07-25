@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AnotaNusa
 
-## Getting Started
+![AnotaNusa Logo](/public/anotanusa.png)
 
-First, run the development server:
+## Summary
+
+AnotaNusa is a collaborative, crowdsourced web platform built to drive the creation of high-quality, culturally aware NLP datasets for all of Indonesia's languages. It directly addresses the critical data bottleneck that hinders the development of truly localised AI systems.
+
+Our mission is to democratize AI development in Indonesia by empowering communities to contribute linguistic data that reflects the rich diversity of Indonesian languages and cultures. Through crowdsourced annotation and data collection, we're building the foundation for more inclusive and representative AI systems.
+
+## Tech Stack
+
+- **Frontend & Backend**: Next.js (Full-stack framework)
+- **Database**: Firebase & Firestore (NoSQL database)
+- **Authentication**: Firebase Authentication
+- **Hosting**: Vercel
+- **Styling**: Tailwind CSS 
+
+### Honorable Mentions - AI Development Tools
+
+Special thanks to the generative AI tools that accelerated our development process:
+
+- **v0.dev** - AI-powered UI component generation and rapid prototyping
+- **Cursor** - AI-assisted code editor for enhanced development productivity  
+- **GPT, Claude, Gemini, and others** - For code generation, debugging, and development assistance
+
+*This project embraces the power of AI-assisted development while building tools to make AI more inclusive for Indonesian languages.*
+
+## Main Website
+
+🌐 **Live Application**: [anotanusa.vercel.app](https://anotanusa.vercel.app)
+
+## Setup Instructions
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- npm or yarn package manager
+- Firebase account and project
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/michaelsinanta/anotanusa.git
+   cd anotanusa
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Environment Setup**
+   
+   Create a `.env` file in the root directory and add your Firebase configuration:
+   
+   ```env
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   ```
+
+4. **Firebase Setup**
+   - Create a new Firebase project
+   - Enable Firestore Database
+   - Enable Authentication (configure your preferred sign-in methods)
+   - Update Firebase security rules as needed
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+6. **Open your browser**
+   
+   Navigate to [http://localhost:3000](http://localhost:3000) to see the application running locally.
+
+### Build for Production
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+We welcome contributions from the community! Please read our contributing guidelines and feel free to submit issues, feature requests, or pull requests.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Contributors
 
-To learn more about Next.js, take a look at the following resources:
+For questions, support, or collaboration opportunities, please reach out to:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Lyzander Marciano Andrylie**
+- Email: [lyzanderandrylie@gmail.com]
+- GitHub: [@LyzanderAndrylie]
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Michael Christlamber Sinanta**
+- Email: [michaelchristlambert@gmail.com]
+- GitHub: [@michaelsinanta]
 
-## Deploy on Vercel
+**Muhammad Hafizha Dhiyaulhaq**
+- Email: [hafizadhyaulhaq16@gmail.com]
+- GitHub: [@hafizhdh]
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**#BahasaUntukBangsa** - Preserving Indonesian Local Languages Through Data Annotation
+```
