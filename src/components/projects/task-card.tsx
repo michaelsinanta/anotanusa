@@ -17,8 +17,8 @@ export default function TaskCard({ docRef, data }: TaskCardProps) {
     (data.currentAnnotators / data.totalAnnotators) * 100;
 
   const projectIsValid =
-    !data.endEarly ||
-    new Date(data.endDate) > new Date() ||
+    !data.endEarly &&
+    new Date(data.endDate) > new Date() &&
     data.currentAnnotators < data.totalAnnotators;
 
   return (
@@ -39,16 +39,14 @@ export default function TaskCard({ docRef, data }: TaskCardProps) {
                 "bg-red-100 text-red-800": !projectIsValid,
               })}
             >
-              {data.endEarly ||
-              (data.endDate && new Date(data.endDate) <= new Date())
-                ? "Ended"
-                : "Active"}
+              {data.endEarly || projectIsValid ? "Active" : "Ended"}
             </Badge>
             <Badge
               className={cn({
                 "bg-blue-100 text-blue-800": data.type === "text-to-text",
                 "bg-yellow-100 text-yellow-800":
                   data.type === "text-classification",
+                "bg-purple-100 text-purple-800": data.type === "text-ranking",
               })}
             >
               {data.type}
