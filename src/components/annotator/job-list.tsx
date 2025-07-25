@@ -33,7 +33,6 @@ export function JobList() {
       setLoading(true);
       setError(null);
       try {
-        // TODO: Fetch jobs data
         const projectsCol = collection(db, "anotanusa-project");
         const projectsSnapshot = await getDocs(projectsCol);
         const projects = projectsSnapshot.docs.map((doc) => {
