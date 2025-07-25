@@ -3,7 +3,11 @@ import { z } from "zod";
 export const createProjectFormSchema = z.object({
   title: z.string().min(1, "Project title is required"),
   description: z.string().min(1, "Description is required"),
-  annotationTask: z.enum(["text-to-text", "text-classification"]),
+  annotationTask: z.enum([
+    "text-to-text",
+    "text-classification",
+    "text-ranking",
+  ]),
   dueDate: z.coerce
     .date()
     .refine((date) => date > new Date(), "Due date must be in the future"),

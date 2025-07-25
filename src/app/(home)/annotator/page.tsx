@@ -1,10 +1,16 @@
-export default function AnnotatorPage() {
+import { JobList } from "@/components/annotator/job-list";
+
+export default function AnnotatorJobsPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold">Welcome to the Annotator Page</h1>
-      <p className="mt-4 text-lg">
-        This is the main content area for annotation tasks.
-      </p>
+    <div className="flex w-full flex-col items-center justify-center p-6 md:p-10">
+      <div className="w-full">
+        <h1 className="mb-2 text-3xl font-bold">Find Annotation Jobs</h1>
+        <p className="mb-6 text-muted-foreground">
+          Browse and join jobs created by dataset creators. Help build
+          high-quality, culturally aware NLP datasets for Indonesia’s languages.
+        </p>
+        <JobList />
+      </div>
     </div>
   );
 }
